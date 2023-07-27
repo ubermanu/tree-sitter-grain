@@ -1,4 +1,5 @@
-module Main
+import List from "list"
+import String from "string"
 
 record TestRecord {
   member1: String,
@@ -6,7 +7,7 @@ record TestRecord {
   member3: List<String>
 }
 
-provide let peek = (reader) => {
+export let peek = (reader) => {
   match (reader.tokens) {
     [current, ..._] => Some(current),
     [] => None

@@ -1,25 +1,22 @@
-// mal_types.gr
-module Types
+import ImmutableMap from "immutablemap"
+import List from "list"
+import Map from "map"
+import Option from "option"
+import Regex from "regex"
+import Result from "result"
+import String from "string"
 
-include "immutablemap"
-include "list"
-include "map"
-include "option"
-include "regex"
-include "result"
-include "string"
-
-provide record Env {
+export record Env {
   outer: Option<Env>,
   data: Map.Map<String, MalType>,
 },
 
-provide record MalFn {
+export record MalFn {
   cb: (List<MalType>, Env) -> Result<MalType, String>,
   is_macro: Bool,
 },
 
-provide enum MalType {
+export enum MalType {
   Nil,
   Bool(Bool),
   String(String),
@@ -33,19 +30,19 @@ provide enum MalType {
   Function(MalFn),
 }
 
-provide let keyword_prefix = "\u029e"
+export let keyword_prefix = "\u029e"
 
-provide let marshal_keyword = (str) => {
+export let marshal_keyword = (str) => {
   let test = 5
   keyword_prefix ++ str
 }
 
-provide let unmarshal_keyword = (str) => {
+export let unmarshal_keyword = (str) => {
   let len = String.length(str)
   String.slice(1, len, str)
 }
 
-provide let unmarshal_maybe_keyword = (str) => {
+export let unmarshal_maybe_keyword = (str) => {
   if (String.startsWith(keyword_prefix, str)) {
     Keyword(unmarshal_keyword(str))
   } else {
@@ -55,7 +52,7 @@ provide let unmarshal_maybe_keyword = (str) => {
 
 let bs_escape_regex = Result.unwrap(Regex.make("\\\\"))
 
-provide let rec pr_str = (val, print_readably) => {
+export let rec pr_str = (val, print_readably) => {
   match (val) {
     Nil => "nil",
     Bool(true) => "true",
@@ -98,12 +95,12 @@ provide let rec pr_str = (val, print_readably) => {
   }
 }
 
-provide let set = (key, val, env) => {
+export let set = (key, val, env) => {
   Map.set(key, val, env.data)
   val
 }
 
-provide let rec find = (key, env) => {
+export let rec find = (key, env) => {
   match (Map.get(key, env.data)) {
     Some(val) => Ok(val),
     None => match (env.outer) {
@@ -113,15 +110,15 @@ provide let rec find = (key, env) => {
   }
 }
 
-provide let get = (key, env) => {
+export let get = (key, env) => {
   Option.toResult("'" ++ key ++ "' not found.", Map.get(key, env.data))
 }
 
-provide let make_inner = (env) => {
+export let make_inner = (env) => {
   { outer: Some(env), data: Map.make() }
 }
 
-provide let get_macro = (key, env) => {
+export let get_macro = (key, env) => {
   let to_macro = (val) => {
     match (val) {
       Function(fn) when fn.is_macro => Ok(fn),

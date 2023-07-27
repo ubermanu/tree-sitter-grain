@@ -1,7 +1,4 @@
-// fn.gr
-module Main
-
-include "immutablemap"
+import ImmutableMap from "immutablemap"
 
 /// multiplies two numbers using a loop
 let mul = (a, b) => {
