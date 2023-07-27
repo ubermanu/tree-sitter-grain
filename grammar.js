@@ -12,16 +12,13 @@ module.exports = grammar({
 
   rules: {
     source_file: $ => seq(
-      $.module,
       repeat($._statement)
     ),
-
-    module: $ => seq('module', $.identifier),
 
     _statement: $ => choice(
       $.assert,
       $.assign_statement,
-      $.include,
+      $.import_statement,
       $.call_expression,
       $.fail,
       $.while_statement,
@@ -29,9 +26,9 @@ module.exports = grammar({
     ),
 
     _definition: $ => choice(
-      seq(optional('provide'), $.let_statement),
+      seq(optional('export'), $.let_statement),
       commaSep1(seq(
-        optional('provide'),
+        optional('export'),
         choice(
           $.enum_definition,
           $.record_definition,
@@ -40,12 +37,27 @@ module.exports = grammar({
       ))
     ),
 
-    include: $ => seq(
-      'include',
-      field('path', $.string_literal),
+    // statements
+
+    // TODO: Handle deconstructed imports
+    import_statement: $ => seq(
+        'import',
+        field('name', $.identifier),
+        'from',
+        field('path', $.string_literal),
     ),
 
-    // statements
+    if_statement: $ => seq(
+        'if',
+        '(',
+        $._expression,
+        ')',
+        $._expression,
+        optional(seq(
+            'else',
+            $._expression
+        ))
+    ),
 
     assert: $ => seq('assert', $._expression),
     fail: $ => seq('fail', $._expression),
@@ -141,7 +153,7 @@ module.exports = grammar({
       '&&','||',
       '&','|','^', '<<', '>>',
       '==', '!=', '<', '<=', '>', '>=',
-      '+', '-', '*', '/', '++',
+      '+', '-', '*', '/', '++', '%',
     ),
 
     block: $ => seq(
