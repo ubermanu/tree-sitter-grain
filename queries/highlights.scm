@@ -16,19 +16,19 @@
 
 [
   "assert"
-  ; "break"
-  ; "else"
+  "else"
   "enum"
+  "export"
   "fail"
-  ; "if"
-  "include"
+  "from"
+  "if"
+  "import"
   "let"
   "match"
-  "module"
   "mut"
-  "provide"
   "rec"
   "record"
+  "type"
   "while"
 ] @keyword
 
@@ -39,8 +39,6 @@
 ] @constant.builtin
 
 "..." @operator
-
-(module (identifier) @constant)
 
 (ERROR) @error
 (number_literal) @number
@@ -55,6 +53,7 @@
 (binding var: (identifier) @variable)
 (function (identifier) @variable)
 
+(import_statement name: (identifier) @variable)
 (enum_definition name: (identifier) @type)
 (enum_variant name: (identifier) @constant)
 (record_definition name: (identifier) @type)
