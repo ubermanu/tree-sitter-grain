@@ -1,17 +1,25 @@
 {
-  "name": "grain-tree-sitter",
-  "version": "1.0.0",
-  "description": "",
+  "name": "tree-sitter-grain",
+  "version": "0.1.0",
   "main": "bindings/node",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "generate": "tree-sitter generate",
+    "test": "tree-sitter test",
+    "parse": "tree-sitter parse test.gr",
+    "highlight": "tree-sitter highlight test.gr"
   },
-  "author": "",
-  "license": "ISC",
+  "dependencies": {
+    "nan": "^2.16.0"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "^0.20.7"
+  },
   "tree-sitter": [
     {
-      "scope": "scope.grain",
-      "file-types": [ "gr" ]
+      "scope": "source.grain",
+      "file-types": [
+        "gr"
+      ]
     }
   ]
 }
